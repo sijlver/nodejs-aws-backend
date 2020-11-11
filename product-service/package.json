@@ -7,9 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "serverless deploy",
     "deploy:func": "serverless deploy function -f getProductsList",
-    "invoke:func:locally": "serverless invoke local --function getProductsList"
+    "invoke:func:locally": "serverless invoke local --function postProducts --path libs/post-products.json"
   },
   "dependencies": {
+    "pg": "^8.4.2",
     "source-map-support": "^0.5.10"
   },
   "devDependencies": {

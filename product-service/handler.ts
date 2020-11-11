@@ -1,4 +1,5 @@
 import 'source-map-support/register';
 
-export { default as getProductsList } from './handlers/get-products-list';
-export { default as getProductsById } from './handlers/get-products-by-id';
+export { default as getProductsList } from './src/handlers/get-products-list';
+export { default as getProductsById } from './src/handlers/get-products-by-id';
+export { default as postProducts } from './src/handlers/post-products';
