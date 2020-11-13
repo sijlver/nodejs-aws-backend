@@ -8,5 +8,4 @@ jspm_packages
 # Webpack directories
 .webpack
 
-.vscode
 credentials.ts
