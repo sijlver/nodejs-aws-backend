@@ -1,5 +1,7 @@
 import type { Serverless } from 'serverless/aws';
 
+import { DB_CREDENTIALS } from './credentials';
+
 const serverlessConfiguration: Serverless = {
   service: {
     name: 'product-service',
@@ -19,7 +21,13 @@ const serverlessConfiguration: Serverless = {
     profile: 'default',
     apiGateway: {
       minimumCompressionSize: 1024,
-    }
+    },
+    environment: {
+      ...DB_CREDENTIALS,
+      PG_HOST: 'nodejs-aws-rds-db.cycqq7bcr6uq.eu-west-1.rds.amazonaws.com',
+      PG_PORT: 5432,
+      PG_DATABASE: 'store'
+    },
   },
   functions: {
     getProductsList: {
