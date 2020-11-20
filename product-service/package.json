@@ -9,6 +9,7 @@
     "invoke:func:locally": "serverless invoke local --function postProducts --path libs/post-products.json"
   },
   "dependencies": {
+    "aws-sdk": "^2.795.0",
     "pg": "^8.4.2",
     "source-map-support": "^0.5.10"
   },

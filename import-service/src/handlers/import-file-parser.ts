@@ -1,17 +1,17 @@
 import { S3Handler } from 'aws-lambda';
-import S3 from 'aws-sdk/clients/s3';
+import AWS from 'aws-sdk';
 import csvParser from 'csv-parser';
 
 const {
   S3_BUCKET_NAME,
-  S3_BUCKET_FOLDER_UPLOADED,
-  S3_BUCKET_FOLDER_PARSED,
   S3_BUCKET_REGION,
   SECRET_ACCESS_KEY,
-  ACCESS_KEY_ID
+  ACCESS_KEY_ID,
+  SQS_REGION,
+  SQS_URL
 } = process.env;
 
-const uploadData = ({ s3, readableConfig, writableConfig, parser }) =>
+const uploadData = ({ s3, sqs, sqsUrl, readableConfig, parser }) =>
   new Promise((resolve, reject) => {
     const readableStream = s3.getObject(readableConfig)
       .createReadStream();
@@ -19,28 +19,46 @@ const uploadData = ({ s3, readableConfig, writableConfig, parser }) =>
     readableStream
       .pipe(parser)
       .on('data', async data => {
-        const body = JSON.stringify(data);
+        const message = JSON.stringify({ ...data, status: 'data' });
 
         try {
-          await s3.upload({
-            ...writableConfig,
-            Body: body
+          await sqs.sendMessage({
+            QueueUrl: sqsUrl,
+            MessageBody: message
           }).promise();
-          console.log(`File: ${body} was successfully uploaded!`);
+          console.log(`Message: ${message} was successfully sent to sqs!`);
         } catch(err) {
-          console.log(`Error occurred during uploading data ${body}!`);
+          console.log(`Error ${err} occurred during sending the message: ${message} to sqs!`);
         }
       })
       .on('error', reject)
-      .on('end', resolve);
+      .on('end', async () => {
+        const message = `File: ${readableConfig.Key} was successfully parsed and sent to sqs`;
+
+        try {
+          await sqs.sendMessage({
+            QueueUrl: sqsUrl,
+            MessageBody: JSON.stringify({ message, status: 'end' })
+          }).promise();
+          console.log(message);
+        } catch(err) {
+          console.log(`Error occurred during sending the message: ${message} to sqs!`);
+        }
+        resolve();
+      });
   })
 
 const importFileParser: S3Handler = async event =>  {
   console.log('Event data: ', event);
 
-  const s3 = new S3({
+  const s3 = new AWS.S3({
     region: S3_BUCKET_REGION,
     signatureVersion: 'v4',
+    secretAccessKey: SECRET_ACCESS_KEY,
+    accessKeyId: ACCESS_KEY_ID
+  });
+  const sqs = new AWS.SQS({
+    region: SQS_REGION,
     secretAccessKey: SECRET_ACCESS_KEY,
     accessKeyId: ACCESS_KEY_ID
   });
@@ -51,17 +69,14 @@ const importFileParser: S3Handler = async event =>  {
 
       await uploadData({
         s3,
+        sqs,
+        sqsUrl: SQS_URL,
         readableConfig: {
           Bucket: S3_BUCKET_NAME,
           Key: key
         },
-        writableConfig: {
-          Bucket: S3_BUCKET_NAME,
-          Key: key.replace(S3_BUCKET_FOLDER_UPLOADED, S3_BUCKET_FOLDER_PARSED)
-        },
         parser: csvParser()
-      })
-      console.log(`File: ${key} was successfully uploaded to ${S3_BUCKET_FOLDER_PARSED} folder!`);
+      });
 
       await s3.deleteObject({
         Bucket: S3_BUCKET_NAME,
