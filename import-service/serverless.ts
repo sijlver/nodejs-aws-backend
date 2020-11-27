@@ -29,7 +29,9 @@ const serverlessConfiguration: Serverless = {
       S3_BUCKET_FOLDER_PARSED: 'parsed',
       S3_BUCKET_CONTENT_TYPE: 'text/csv',
       S3_BUCKET_REGION: 'eu-west-1',
-      S3_BUCKET_SIGNED_URL_EXPIRES: 60
+      S3_BUCKET_SIGNED_URL_EXPIRES: 60,
+      SQS_REGION: 'eu-west-1',
+      SQS_URL: '${cf:product-service-dev.CatalogItemsQueueUrl}'
     },
     iamRoleStatements: [{
       Effect: 'Allow',
@@ -40,6 +42,11 @@ const serverlessConfiguration: Serverless = {
       Effect: 'Allow',
       Action: 's3:*',
       Resource: 'arn:aws:s3:::nodejs-aws-backend-products/*'
+    },
+    {
+      Effect: 'Allow',
+      Action: 'sqs:*',
+      Resource: 'arn:aws:sqs:eu-west-1:315965544351:catalog-items-queue'
     }]
   },
   functions: {
