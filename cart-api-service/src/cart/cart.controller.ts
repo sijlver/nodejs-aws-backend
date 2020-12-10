@@ -7,7 +7,7 @@ import { AppRequest, getUserIdFromRequest } from '../shared';
 import { calculateCartTotal } from './models-rules';
 import { CartService } from './services';
 
-@Controller('api/profile/cart')
+@Controller('api/cart')
 export class CartController {
   constructor(
     private cartService: CartService,
