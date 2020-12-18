@@ -1,0 +1,21 @@
+service: layer-service
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: dev
+  region: eu-west-1
+layers:
+  customLayer:
+    path: custom-layer
+    description: "Axios, utils (log)"
+functions:
+  getLayer:
+    handler: handler.getLayer
+    layers:
+      - { Ref: CustomLayerLambdaLayer }
+    events:
+      - http: 
+          path: /
+          method: get

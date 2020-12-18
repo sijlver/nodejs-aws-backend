@@ -1,0 +1,31 @@
+{
+  "name": "warmup-service",
+  "version": "1.0.0",
+  "description": "Serverless webpack example using Typescript",
+  "main": "handler.js",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "remove": "sls remove --all",
+    "layer:func-update": "aws lambda update-function-configuration --function-name warmup-service-dev-getWarmup --layers arn:aws:lambda:eu-west-1:315965544351:layer:custom-layer:2"
+  },
+  "dependencies": {
+    "axios": "^0.21.0",
+    "source-map-support": "^0.5.10"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.17",
+    "@types/node": "^10.12.18",
+    "@types/serverless": "^1.72.5",
+    "aws-sdk": "^2.812.0",
+    "fork-ts-checker-webpack-plugin": "^3.0.1",
+    "serverless-plugin-warmup": "^4.9.0",
+    "serverless-webpack": "^5.2.0",
+    "ts-loader": "^5.3.3",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.2.4",
+    "webpack": "^4.29.0",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
+  "license": "MIT"
+}

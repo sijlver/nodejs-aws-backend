@@ -22,7 +22,8 @@
     "eb:create": "eb create bff-service-develop --single --cname bff-service",
     "eb:deploy": "eb deploy",
     "eb:logs": "eb logs bff-service-develop",
-    "eb:terminate": "eb terminate"
+    "eb:terminate": "eb terminate",
+    "eb:terminate:all": "eb terminate --all --force"
   },
   "dependencies": {
     "@nestjs/common": "^7.5.1",
