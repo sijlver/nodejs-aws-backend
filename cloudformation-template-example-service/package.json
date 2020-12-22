@@ -1,0 +1,11 @@
+{
+  "name": "cloudformation-template-example-service",
+  "version": "1.0.0",
+  "main": "handler.js",
+  "scripts": {
+    "create": "aws cloudformation create-stack --stack-name smt --region eu-west-1 --template-body file://smt.json",
+    "delete": "aws cloudformation delete-stack --stack-name smt",
+    "update": "aws cloudformation update-stack --stack-name smt --region eu-west-1 --template-body file://smt.json",
+    "validate": "aws cloudformation create-change-set --stack-name smt --region eu-west-1 --template-body file://smt.json --change-set-name test"
+  }
+}

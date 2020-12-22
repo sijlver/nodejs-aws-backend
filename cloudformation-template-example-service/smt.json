@@ -1,0 +1,28 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Resources" : {
+    "EC2Instance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "ImageId": "ami-0ce1e3f77cd41957e",
+        "InstanceType": "t2.micro",
+        "KeyName": "ssh-key-pair",
+        "Tags": [{ "Key": "Name", "Value": "ec2 instance" }],
+        "SecurityGroupIds": [{ "Ref": "SSHSecurityGroup" }]
+      }
+    },
+    "SSHSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "ssh access",
+        "GroupName": "ssh",
+        "SecurityGroupIngress": [{
+          "IpProtocol" : "tcp",
+          "FromPort" : 22,
+          "ToPort" : 22,
+          "CidrIp" : "46.216.20.231/32"
+        }]
+      }
+    }
+  }
+}
