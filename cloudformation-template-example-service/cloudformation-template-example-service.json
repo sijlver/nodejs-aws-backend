@@ -1,0 +1,53 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Resources" : {
+    "EC2Instance" : {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : {
+        "ImageId": "ami-0ce1e3f77cd41957e",
+        "InstanceType": "t2.micro",
+        "KeyName": "ssh-key-pair",
+        "Tags": [{ "Key": "Name", "Value": "ec2 instance" }],
+        "SecurityGroupIds": [{ "Ref": "SSHSecurityGroup" }, { "Ref": "HTTPSecurityGroup" }],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": ["", [
+              "#!/bin/bash -ex\n",
+              "sudo yum -y install docker\n",
+              "sudo service docker start\n",
+              "sudo docker run -d -p 80:8080 sijlver/cloudformation-template-example-service\n"
+            ]]
+          }
+        }
+      }
+    },
+    "SSHSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "ssh access",
+        "GroupName": "ssh",
+        "Tags": [{ "Key": "Name", "Value": "ssh access" }],
+        "SecurityGroupIngress": [{
+          "IpProtocol" : "tcp",
+          "FromPort" : 22,
+          "ToPort" : 22,
+          "CidrIp" : "0.0.0.0/0"
+        }]
+      }
+    },
+    "HTTPSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "http access",
+        "GroupName": "http",
+        "Tags": [{ "Key": "Name", "Value": "http access" }],
+        "SecurityGroupIngress": [{
+          "IpProtocol" : "tcp",
+          "FromPort" : 80,
+          "ToPort" : 80,
+          "CidrIp" : "0.0.0.0/0"
+        }]
+      }
+    }
+  }
+}

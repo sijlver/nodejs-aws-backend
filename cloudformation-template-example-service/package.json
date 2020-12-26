@@ -3,9 +3,19 @@
   "version": "1.0.0",
   "main": "handler.js",
   "scripts": {
-    "create": "aws cloudformation create-stack --stack-name smt --region eu-west-1 --template-body file://smt.json",
-    "delete": "aws cloudformation delete-stack --stack-name smt",
-    "update": "aws cloudformation update-stack --stack-name smt --region eu-west-1 --template-body file://smt.json",
-    "validate": "aws cloudformation create-change-set --stack-name smt --region eu-west-1 --template-body file://smt.json --change-set-name test"
+    "start": "node index.js",
+    "docker:build:image": "docker build -t cloudformation-template-example-service .",
+    "docker:run:image": "docker run --rm -p 80:8080 -d cloudformation-template-example-service",
+    "docker:remove:images": "docker system prune -a",
+    "docker:login": "docker login",
+    "docker:tag": "docker tag cloudformation-template-example-service sijlver/cloudformation-template-example-service",
+    "docker:push": "docker push sijlver/cloudformation-template-example-service",
+    "cloudformation:create": "aws cloudformation create-stack --stack-name cloudformation-template-example-service --region eu-west-1 --template-body file://cloudformation-template-example-service.json",
+    "cloudformation:delete": "aws cloudformation delete-stack --stack-name cloudformation-template-example-service",
+    "cloudformation:update": "aws cloudformation update-stack --stack-name cloudformation-template-example-service --region eu-west-1 --template-body file://cloudformation-template-example-service.json",
+    "cloudformation:validate": "aws cloudformation create-change-set --stack-name cloudformation-template-example-service --region eu-west-1 --template-body file://cloudformation-template-example-service.json --change-set-name test"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
