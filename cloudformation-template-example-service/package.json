@@ -4,6 +4,7 @@
   "main": "handler.js",
   "scripts": {
     "start": "node index.js",
+    "docker:compose:volumes:example:run": "docker-compose up volumes-example",
     "docker:build:image": "docker build -t cloudformation-template-example-service .",
     "docker:run:image": "docker run --rm -p 80:8080 -d cloudformation-template-example-service",
     "docker:remove:images": "docker system prune -a",

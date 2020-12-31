@@ -1,0 +1,11 @@
+# node_modules is built as a part of image
+node_modules
+
+# files which are not necessary during creating images
+.eslintrc.js
+.gitignore
+debug.log
+README.md
+
+# ignore all test files
+*.spec.ts

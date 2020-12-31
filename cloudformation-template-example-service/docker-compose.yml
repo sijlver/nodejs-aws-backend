@@ -1,0 +1,8 @@
+version: '3'
+services:
+  volumes-example:
+    image: 'cloudformation-template-example-service'
+    volumes:
+      - './data:/usr/src/app/data'
+    ports:
+      - '3000:8080'
